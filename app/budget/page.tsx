@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Header } from '@/components/header'
@@ -43,7 +43,7 @@ const categories = [
   { value: 'other', label: 'Other', icon: DollarSign, color: 'bg-gray-100 text-gray-700' },
 ]
 
-export default function BudgetPage() {
+function BudgetPageContent() {
   const [trips, setTrips] = useState<Trip[]>([])
   const [selectedTrip, setSelectedTrip] = useState<string>('')
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([])
@@ -436,5 +436,17 @@ export default function BudgetPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function BudgetPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <BudgetPageContent />
+    </Suspense>
   )
 }
